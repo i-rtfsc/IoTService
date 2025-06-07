@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# 连接终端输入，解决 input() 无法读取的问题
+exec < /dev/tty
+
+# 跳过自动生成提交信息的场景（如 merge）
+if [[ "$2" == "merge" || "$2" == "squash" ]]; then
+  exit 0
+fi
+
+# 调用 Python 输入交互式 commit 信息
+python3 .git/hooks/commit_prompt.py "$1"

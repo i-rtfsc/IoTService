@@ -1,0 +1,10 @@
+#!/bin/bash
+# 校验 commit message 格式：必须符合 <type>(<scope>): <subject>
+commit_msg_file="$1"
+message=$(head -n1 "$commit_msg_file")
+
+if ! echo "$message" | grep -Eq '^[a-z]+(\([^)]+\))?: .+'; then
+  echo "❌ commit message 格式不合法，必须类似于：feat(codec): 修复xxx"
+  exit 1
+fi
+

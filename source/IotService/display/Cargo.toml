@@ -1,0 +1,11 @@
+[package]
+name = "display"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "display"
+crate-type = ["staticlib"]  # 静态库给 C++ 调用
+
+[dependencies]
+libc = "0.2"

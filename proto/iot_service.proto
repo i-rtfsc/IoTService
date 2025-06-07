@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package iot;
+
+option java_package = "com.rtfsc.iot.proto";
+option java_multiple_files = true;
+option java_outer_classname = "IOTProto";
+
+service IoTService {
+  rpc sendCommand(DeviceCommand) returns (CommandResponse);
+  rpc reportStatus(DeviceStatus) returns (Ack);
+  //长连接心跳流
+  rpc heartbeat(stream HeartbeatRequest) returns (stream Ack);
+}
+
+// 下发命令
+message DeviceCommand {
+  string device_id = 1;
+  string command = 2;
+  map<string, string> params = 3;
+  string user_id = 4;
+  string auth_token = 5;
+  int64 timestamp = 6;
+}
+
+// 命令响应
+message CommandResponse {
+  int32 code = 1;       // 0 成功；非0 失败
+  string message = 2;   // 文本描述
+}
+
+// 设备状态上报
+message DeviceStatus {
+  string device_id = 1;
+  string status = 2;
+  map<string, string> details = 3;
+  string user_id = 4;
+  string auth_token = 5;
+  int64 timestamp = 6;
+}
+
+// 心跳请求
+message HeartbeatRequest {
+  string device_id = 1;
+  string user_id = 2;
+  string auth_token = 3;
+  int64 timestamp = 4;
+}
+
+// 通用确认应答
+message Ack {
+  int32 code = 1;
+  string message = 2;
+}
