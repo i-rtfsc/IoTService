@@ -7,15 +7,20 @@
 #define IOT_NS_BEGIN namespace IOT_NS {
 #define IOT_NS_END }
 
-// common 模块
-#define IOT_COMMON_NS IOT_NS::common
-#define IOT_COMMON_NS_BEGIN namespace IOT_COMMON_NS {
-#define IOT_COMMON_NS_END }
+// user 模块
+#define IOT_USER_NS IOT_NS::user
+#define IOT_USER_NS_BEGIN namespace IOT_USER_NS {
+#define IOT_USER_NS_END }
 
-// framework 模块
-#define IOT_FRAMEWORK_NS IOT_NS::framework
-#define IOT_FRAMEWORK_NS_BEGIN namespace IOT_FRAMEWORK_NS {
-#define IOT_FRAMEWORK_NS_END }
+// device 模块
+#define IOT_DEVICE_NS IOT_NS::device
+#define IOT_DEVICE_NS_BEGIN namespace IOT_DEVICE_NS {
+#define IOT_DEVICE_NS_END }
+
+// task 模块
+#define IOT_TASK_NS IOT_NS::task
+#define IOT_TASK_NS_BEGIN namespace IOT_TASK_NS {
+#define IOT_TASK_NS_END }
 
 // utils 模块
 #define IOT_UTILS_NS IOT_NS::utils

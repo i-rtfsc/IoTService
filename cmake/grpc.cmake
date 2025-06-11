@@ -11,18 +11,14 @@ if (DL_GRPC)
     FetchContent_Declare(
             grpc
             GIT_REPOSITORY https://github.com/grpc/grpc.git
-            GIT_kTAG v1.69.0 # 最新稳定版本
+            GIT_kTAG v1.73.0 # 最新稳定版本
     )
     FetchContent_MakeAvailable(grpc)
 
 else ()
     message(STATUS "DL_GRPC=OFF: using system-installed gRPC and protobuf...")
 
-    set(Protobuf_ROOT "/usr/local/opt/protobuf@21") 
-
     find_package(Protobuf REQUIRED)
-    set(Protobuf_LIBRARIES "/usr/local/opt/protobuf@21/lib/libprotobuf.dylib")
-
     find_package(gRPC REQUIRED)
 
     # 打印 Protobuf 版本
@@ -37,18 +33,4 @@ else ()
     message(STATUS "  gRPC_CPP_PLUGIN_VERSION    = ${gRPC_CPP_PLUGIN_VERSION}")
     message(STATUS "  gRPC_CPP_PLUGIN_EXECUTABLE = ${gRPC_CPP_PLUGIN_EXECUTABLE}")
 
-    #    execute_process(
-    #            COMMAND protoc --version
-    #            OUTPUT_VARIABLE PROTOC_VERSION
-    #            OUTPUT_STRIP_TRAILING_WHITESPACE
-    #    )
-    #    message(STATUS "protoc version: ${PROTOC_VERSION}")
-    #
-    #    execute_process(
-    #            COMMAND ${gRPC_CPP_PLUGIN_EXECUTABLE} --version
-    #            OUTPUT_VARIABLE GRPC_PLUGIN_VERSION
-    #            OUTPUT_STRIP_TRAILING_WHITESPACE
-    #    )
-    #    message(STATUS "gRPC plugin version: ${GRPC_PLUGIN_VERSION}")
-    #
 endif ()

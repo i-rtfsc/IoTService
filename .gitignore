@@ -60,5 +60,7 @@ cmake-build-debug/
 *_pb2.py
 *_pb2_grpc.py
 
+*.protoset
+
 # rust build artifacts
 source/IotService/display/target

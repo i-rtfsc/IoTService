@@ -2,53 +2,66 @@ syntax = "proto3";
 
 package iot;
 
+// Java代码生成相关选项，方便在Java项目中使用该proto定义
 option java_package = "com.rtfsc.iot.proto";
 option java_multiple_files = true;
 option java_outer_classname = "IOTProto";
 
+/**
+ * @brief IoT 设备服务定义，包含命令发送、状态上报和心跳流接口
+ *
+ * 服务描述：
+ * - sendCommand：向设备下发命令，客户端发送 DeviceCommand，服务器返回 CommandResponse。
+ * - reportStatus：设备状态上报，客户端发送 DeviceStatus，服务器返回通用确认 Ack。
+ * - heartbeat：基于双向流的心跳机制，客户端发送连续的 HeartbeatRequest，服务器连续返回 Ack，保持连接活跃。
+ */
 service IoTService {
+  // 发送命令接口，单次请求响应
   rpc sendCommand(DeviceCommand) returns (CommandResponse);
+
+  // 设备状态上报接口，单次请求响应
   rpc reportStatus(DeviceStatus) returns (Ack);
-  //长连接心跳流
+
+  // 长连接心跳流接口，支持双向流式通信
   rpc heartbeat(stream HeartbeatRequest) returns (stream Ack);
 }
 
-// 下发命令
+// 设备命令请求消息结构
 message DeviceCommand {
-  string device_id = 1;
-  string command = 2;
-  map<string, string> params = 3;
-  string user_id = 4;
-  string auth_token = 5;
-  int64 timestamp = 6;
+  string device_id = 1;               // 设备唯一标识
+  string command = 2;                 // 命令字符串
+  map<string, string> params = 3;    // 命令参数集合（键值对）
+  string user_id = 4;                 // 用户ID，用于身份识别
+  string auth_token = 5;              // 认证令牌，用于安全验证
+  int64 timestamp = 6;                // 时间戳，单位为毫秒，用于防重放等
 }
 
-// 命令响应
+// 命令响应消息结构
 message CommandResponse {
-  int32 code = 1;       // 0 成功；非0 失败
-  string message = 2;   // 文本描述
+  int32 code = 1;       // 状态码，0 表示成功，非0 表示失败
+  string message = 2;   // 响应文本描述，提供错误信息或成功提示
 }
 
-// 设备状态上报
+// 设备状态上报消息结构
 message DeviceStatus {
-  string device_id = 1;
-  string status = 2;
-  map<string, string> details = 3;
-  string user_id = 4;
-  string auth_token = 5;
-  int64 timestamp = 6;
+  string device_id = 1;             // 设备唯一标识
+  string status = 2;                // 状态简述，如“在线”、“离线”等
+  map<string, string> details = 3; // 状态详细信息（键值对）
+  string user_id = 4;               // 用户ID
+  string auth_token = 5;            // 认证令牌
+  int64 timestamp = 6;              // 时间戳，单位为毫秒
 }
 
-// 心跳请求
+// 心跳请求消息结构，用于保持设备与服务端的连接活跃
 message HeartbeatRequest {
-  string device_id = 1;
-  string user_id = 2;
-  string auth_token = 3;
-  int64 timestamp = 4;
+  string device_id = 1;      // 设备唯一标识
+  string user_id = 2;        // 用户ID
+  string auth_token = 3;     // 认证令牌
+  int64 timestamp = 4;       // 时间戳，单位为毫秒
 }
 
-// 通用确认应答
+// 通用确认应答消息结构，用于响应各类请求
 message Ack {
-  int32 code = 1;
-  string message = 2;
+  int32 code = 1;       // 状态码，0 表示成功，非0 表示失败
+  string message = 2;   // 响应消息文本
 }

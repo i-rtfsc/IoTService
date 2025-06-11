@@ -1,5 +1,3 @@
-# cmake/clang_tidy.cmake
-
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(ENABLE_CLANG_TIDY "Enable clang-tidy static analysis" ON)

@@ -1,135 +1,59 @@
 Checks: >
-  -*,  # 禁用所有检查项，后续按需启用。
+  -*,
 
-  # Abseil 模块：建议使用 Abseil 提供的安全、现代替代方案。
-  abseil-*,
-  -abseil-cleanup-ctad,        # 禁用 Abseil 的构造模板参数推导清理建议。
-  -abseil-no-namespace,        # 禁用不允许使用 Abseil 类型于命名空间内的规则。
-
-  # Bugprone 模块：检测容易引发 bug 的编码模式。
+  # --- 核心安全性、bug 检查 ---
+  # 捕获易引发 bug 的模式
   bugprone-*,
-  -bugprone-assignment-in-if-condition,         # 允许 if 条件中使用赋值语句。
-  -bugprone-branch-clone,                       # 忽略分支之间高度重复的逻辑。
-  -bugprone-easily-swappable-parameters,        # 忽略容易调换参数的函数（如位置、类型相似）。
-  -bugprone-empty-catch,                        # 忽略空 catch 块检查。
-  -bugprone-exception-escape,                   # 忽略异常未在函数中处理而逃逸的警告。
-  -bugprone-implicit-widening-of-multiplication-result,  # 忽略乘法结果的类型扩展警告。
-  -bugprone-infinite-loop,                      # 忽略可能导致无限循环的结构。
-  -bugprone-narrowing-conversions,              # 忽略类型收缩时可能数据丢失的转换。
-  -bugprone-not-null-terminated-result,         # 忽略非 null 结尾字符串的返回值。
-  -bugprone-reserved-identifier,                # 忽略使用保留标识符（如以 __ 开头）的名称。
-  -bugprone-signed-char-misuse,                 # 忽略对 signed char 错误用法的检查。
-  -bugprone-sizeof-expression,                  # 忽略 sizeof 用法不当的警告。
-  -bugprone-switch-missing-default-case,        # 忽略 switch 中缺失 default 分支。
-  -bugprone-too-small-loop-variable,            # 忽略循环变量过小可能导致溢出的问题。
-  -bugprone-unchecked-optional-access,          # 忽略未检查 optional 是否有值就访问的警告。
-
-  # Google 风格检查（根据 Google C++ Style Guide）
-  google-*,
-  -google-readability-casting,        # 忽略 C 风格强制类型转换的风格建议。
-  -google-runtime-int,                # 忽略禁止使用 `int` 类型建议（推荐使用 `int32_t`）。
-  -google-runtime-references,         # 忽略对函数参数使用非 const 引用的检查。
-
-  # 性能优化建议（如避免不必要的拷贝等）
-  performance-*,
-  -performance-avoid-endl,                       # 忽略推荐使用 '\n' 替代 std::endl 的建议。
-  -performance-no-automatic-move,                # 忽略禁用自动移动优化的建议。
-  -performance-no-int-to-ptr,                    # 忽略 int 转指针类型的警告。
-  -performance-noexcept-swap,                    # 忽略建议使用 noexcept swap 的警告。
-  -performance-unnecessary-copy-initialization,  # 忽略不必要的变量拷贝初始化检查。
-  -performance-unnecessary-value-param,          # 忽略传值参数可替换为 const 引用的建议。
-
-  # Clang Static Analyzer（静态分析器）提供的各类检测
   clang-analyzer-*,
-  -clang-analyzer-alpha*,                    # 禁用 alpha 类（实验性）检查。
+  # 减少误报（实用函数多）
+  -bugprone-easily-swappable-parameters,
+  # 对 size_t/迭代器不太适用
+  -bugprone-too-small-loop-variable,
 
-  # 启用部分诊断（diagnostic）警告项
-  clang-diagnostic-deprecated-declarations,              # 警告使用废弃的声明。
-  clang-diagnostic-deprecated-register,                  # 警告使用废弃的 register 关键字。
-  clang-diagnostic-expansion-to-defined,                 # 宏展开时涉及 `defined()` 触发的警告。
-  clang-diagnostic-ignored-attributes,                   # 属性标注被忽略时的警告。
-  clang-diagnostic-non-pod-varargs,                      # 使用可变参数传递非 POD 类型的警告。
-  clang-diagnostic-shadow-field,                         # 字段名称遮蔽同名变量的警告。
-  clang-diagnostic-shift-sign-overflow,                  # 警告符号位移溢出。
-  clang-diagnostic-tautological-undefined-compare,       # 无意义比较（恒为真或假）。
-  clang-diagnostic-thread-safety*,                       # 启用线程安全相关检查。
-  clang-diagnostic-undefined-bool-conversion,            # 非布尔类型用于布尔上下文。
-  clang-diagnostic-unreachable-code,                     # 检测不可达代码。
-  clang-diagnostic-unreachable-code-loop-increment,      # for 循环中增量永远不会被执行。
-  clang-diagnostic-unused-const-variable,                # 未使用的 const 变量。
-  clang-diagnostic-unused-lambda-capture,                # 未使用的 lambda 捕获项。
-  clang-diagnostic-unused-local-typedef,                 # 未使用的局部 typedef。
-  clang-diagnostic-unused-private-field,                 # 未使用的类私有字段。
-  clang-diagnostic-user-defined-warnings,                # 用户自定义触发的警告。
+  # --- 性能优化相关 ---
+  performance-*,
+  # 过于严格，现代编译器可优化
+  -performance-no-automatic-move,
+  # 实际误报概率低，暂不启用
+  -performance-implicit-conversion-in-loop,
 
-  # misc 模块：杂项风格与逻辑检查
-  misc-definitions-in-headers,           # 检查头文件中定义函数或变量的行为。
-  misc-static-assert,                    # 强制使用 static_assert 而非旧版方式。
-  misc-unconventional-assign-operator,   # 赋值操作符应返回引用自身。
-  misc-uniqueptr-reset-release,          # 避免 reset(release()) 的低效用法。
-  misc-unused-alias-decls,               # 检查未使用的类型别名。
-  misc-unused-using-decls,               # 检查未使用的 using 声明。
+  # --- 可维护性与风格建议 ---
+  readability-identifier-naming,
+  # 统一命名、简化表达
+  readability-*,                     
+  # 不限制标识符长度（实际项目中可能需要更长）
+  -readability-identifier-length 
+  
+  modernize-*,
+  # 不强制使用尾返回类型
+  -modernize-use-trailing-return-type,
 
-  # modernize 模块：推荐使用现代 C++ 风格
-  modernize-make-shared,                   # 使用 std::make_shared 替代显式构造。
-  modernize-make-unique,                  # 使用 make_unique 替代 new。
-  modernize-replace-auto-ptr,            # 替换废弃的 std::auto_ptr。
-  modernize-replace-random-shuffle,      # 替换废弃的 std::random_shuffle。
-  modernize-shrink-to-fit,               # 使用 shrink_to_fit() 收缩容器容量。
-  modernize-unary-static-assert,         # 推荐使用单参数 static_assert。
-  modernize-use-bool-literals,           # 推荐使用 true/false 替代整型布尔。
-  modernize-use-noexcept,                # 推荐加上 noexcept 声明。
-  modernize-use-nullptr,                 # 使用 nullptr 替代 0 或 NULL。
-  modernize-use-override,                # 使用 override 替代虚函数。
-  modernize-use-transparent-functors,    # 使用透明比较器（如 std::less<>）。
+  # --- Google 风格 ---
+  # 统一代码风格
+  google-*,
+  # int/long等实际更通用
+  -google-runtime-int,
+  # 过大函数的容忍度由架构决定
+  -google-readability-function-size,
 
-  # readability 模块：代码可读性建议
-  readability-braces-around-statements,              # 推荐对 if/while 等语句加花括号。
-  readability-const-return-type,                     # 避免返回值使用 const 修饰。
-  readability-container-size-empty,                  # 推荐使用 empty() 替代 size() == 0。
-  readability-delete-null-pointer,                   # delete 空指针是安全的，可省略判断。
-  readability-deleted-default,                       # 避免同时 delete 和 default 函数。
-  readability-duplicate-include,                     # 检查重复 include。
-  readability-function-size,                         # 函数体过大提醒，详见下方选项。
-  readability-inconsistent-declaration-parameter-name,  # 函数声明和定义参数名不一致。
-  readability-misleading-indentation,                # 缩进混乱导致误导。
-  readability-misplaced-array-index,                 # 推荐 array[i] 而非 i[array]。
-  readability-redundant-access-specifiers,           # 重复使用 public/private 修饰符。
-  readability-redundant-control-flow,                # return/continue 后无意义的语句。
-  readability-redundant-function-ptr-dereference,    # (*fp)() 可写成 fp()。
-  readability-redundant-smartptr-get,                # 不必要的 smart_ptr.get()。
-  -readability-redundant-string-cstr,                # 禁用 c_str() 的冗余性检查。
-  readability-redundant-string-init,                 # std::string s = ""; 可直接写为默认构造。
-  readability-simplify-boolean-expr,                 # 简化布尔表达式。
-  readability-static-definition-in-anonymous-namespace,  # 匿名命名空间内的 static 冗余。
-  readability-string-compare,                        # 使用 == 替代 compare。
-  readability-uniqueptr-delete-release,              # unique_ptr 删除器写法不当。
-  readability-identifier-naming,                     # 命名风格统一检查。
-  -readability-magic-numbers,                        # 禁用魔法数字检查。
+  # --- 杂项 ---
+  misc-definitions-in-headers,
+  misc-static-assert,
+  misc-unused-using-decls,
 
-  # C++ Core Guidelines 模块
-  cppcoreguidelines-*,
+  # --- 自定义诊断控制 ---
+  clang-diagnostic-unused-variable,
+  clang-diagnostic-unused-private-field,
+  clang-diagnostic-shadow,
+  clang-diagnostic-deprecated-declarations,  
 
-  # 关闭 include-cleaner（可能过于严格）
-  -misc-include-cleaner
-
-WarningsAsErrors: '*'  # 所有警告均视为错误，强制代码风格、质量严格一致。
+WarningsAsErrors: ''  # 默认不将警告视为错误，可根据 CI 配置调整
+HeaderFilterRegex: '.*source/.*'  # 仅检查 source/ 目录相关文件（包括 header）
+FormatStyle: file  # 与 .clang-format 保持一致
 
 CheckOptions:
   - key: readability-function-size.StatementThreshold
     value: '450'  # 函数语句数超过 450 行将触发警告。
-
-  - key: modernize-make-unique.MakeSmartPtrFunction
-    value: 'absl::make_unique'  # 使用 absl::make_unique 替代 std::make_unique。
-
-  - key: modernize-make-unique.MakeSmartPtrFunctionHeader
-    value: 'absl/memory/memory.h'  # absl::make_unique 所属头文件。
-
-  - key: readability-braces-around-statements.ShortStatementLines
-    value: 1  # 单行语句是否强制加花括号，超过该行数即要求加括号。
-
-  - key: readability-simplify-boolean-expr.SimplifyDeMorgan
-    value: false  # 是否自动简化 DeMorgan 逻辑表达式（例如 !(a || b) => !a && !b）。
 
   # 类命名使用 PascalCase，例如：MyClass、ImageProcessor
   - key: readability-identifier-naming.ClassCase
@@ -179,15 +103,6 @@ CheckOptions:
   - key: readability-identifier-naming.ClassMemberCase
     value: camelBack
 
-  # 类成员前缀设为 m_，常用于跨平台项目，如 m_Count、m_Flags
+  # 类成员前缀设为 m，常用于跨平台项目，如 mCount、mFlags
   - key: readability-identifier-naming.ClassMemberPrefix
-    value: m_
-
-  # 类成员后缀为空（默认），如不设为空则可设置 `_` 等
-  - key: readability-identifier-naming.ClassMemberSuffix
-    value: ''
-
-  # 允许参数名中包含下划线，例如：file_path、thread_id
-  - key: readability-identifier-naming.AllowUnderscoreInParameters
-    value: true
-
+    value: m
