@@ -62,5 +62,7 @@ cmake-build-debug/
 
 *.protoset
 
+output.txt
+
 # rust build artifacts
 source/service/display/target

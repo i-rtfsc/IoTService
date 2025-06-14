@@ -18,43 +18,75 @@ IoTService 是一个通用、跨平台、设备间自由通信的“万物互联
 
 ```bash
 
-├── CMakeLists.txt               # 顶层构建文件
-├── README.md                    # 项目说明
-├── client                       # 客户端目录
-│   └── tools/python             # Python 调试客户端
-│       ├── build_proto.sh       # proto 编译脚本
-│       ├── grpc_client.py       # 通用 gRPC 客户端逻辑
-│       ├── account_service_pb2.py / _grpc.py
-│       ├── iot_service_pb2.py / _grpc.py
-├── cmake                        # 构建配置文件
-│   ├── clang-format.cmake       # 代码格式化支持
-│   ├── clang-tidy.cmake         # 代码静态检查支持
-│   └── grpc.cmake               # 依赖下载与管理
-├── docs                         # 项目文档
+├── CMakeLists.txt                # 顶层 CMake 构建入口
+├── README.md                     # 项目说明文件
+
+├── client                        # 客户端工具集
+│   └── tools
+│       ├── grpcurl               # 基于 grpcurl 的调试客户端
+│       │   ├── build_proto.sh
+│       │   ├── descriptor.protoset
+│       │   └── grpcurl_client.sh
+│       └── python                # Python gRPC 客户端
+│           ├── build_proto.sh
+│           ├── grpc_client.py
+│           ├── iot_service_pb2.py
+│           └── iot_service_pb2_grpc.py
+
+├── cmake                         # 构建配置模块
+│   ├── check-clang-format.sh
+│   ├── clang-format.cmake
+│   ├── clang-tidy.cmake
+│   ├── grpc.cmake
+│   └── gtest.cmake
+
+├── docs                          # 项目文档
 │   ├── clang-tidy-check.md
 │   ├── commit-msg.md
-│   └── deps.md
-├── proto                        # ProtoBuf 定义
-│   ├── account_service.proto
+│   ├── deps.md
+│   ├── grpcurl.md
+│   └── plugin.md
+
+├── proto                         # 通信协议定义（ProtoBuf）
+│   ├── CMakeLists.txt
 │   └── iot_service.proto
-├── scripts                      # 通用脚本
-│   ├── git-hooks                # 提交规范钩子
-│   ├── install-hooks.sh         # 安装钩子脚本
-│   └── run-clang-tidy-check.sh  # 一键运行静态检查
-└── source                       # 源码目录
-    ├── IotFramework             # 框架核心逻辑
-    │   ├── device               # 设备管理模块
-    │   ├── message              # 消息路由与调度
-    │   ├── thread               # 多线程调度结构
-    │   ├── user                 # 用户信息管理
-    │   └── include/framework    # 公共头文件
-    ├── IotService               # 服务端主逻辑
-    │   ├── grpc                 # gRPC 服务实现
-    │   ├── display              # Rust UI 端展示（WIP）
-    │   └── main.cpp             # 入口主函数
-    ├── IotUtils                 # 工具库
-    │   └── Logger/Log.h         # 日志工具
-    └── include/common           # 通用数据结构等
+
+├── scripts                       # 工具脚本
+│   ├── dump_tree_with_content.py
+│   ├── git-hooks
+│   │   ├── commit-msg
+│   │   ├── commit_prompt.py
+│   │   └── prepare-commit-msg
+│   ├── install-hooks.sh
+│   ├── kill.sh
+│   └── run-clang-tidy-check.sh
+
+├── source                        # 核心源代码
+│   ├── CMakeLists.txt
+│   ├── common                    # 通用数据结构与上下文
+│   │   └── include
+│   │       ├── common           # 命名空间定义、分片结构
+│   │       ├── context          # 请求上下文
+│   │       ├── device           # 设备结构定义
+│   │       └── user             # 用户结构定义
+│   ├── core                      # 核心逻辑实现
+│   │   ├── message              # 消息调度与路由
+│   │   │   ├── include
+│   │   │   └── src
+│   │   └── thread               # 线程调度框架
+│   │       ├── handler
+│   │       ├── queue
+│   │       └── task
+│   ├── iface                     # 接口定义层（抽象设备/用户管理）
+│   │   ├── device
+│   │   │   └── include
+│   │   └── user
+│   │       └── include
+│   ├── impls                     # 模块实现层（如默认设备实现）
+│   │   ├── device
+│   │   │   └── default
+│   │   └── ...
+
 
 ```
 
@@ -64,7 +96,6 @@ IoTService 是一个通用、跨平台、设备间自由通信的“万物互联
 
 使用 Protocol Buffers 描述各类设备、服务的数据格式和通信接口。
 
-- account_service.proto：账号服务，负责身份注册与认证
 - iot_service.proto：设备注册、上下线通知、消息中转等核心通信接口
 
 生成的 .pb2 / .pb.h 文件用于支持多语言接入。
@@ -77,9 +108,8 @@ IoTService 是一个通用、跨平台、设备间自由通信的“万物互联
 - user：用户上下文管理
 - message：消息的路由转发逻辑（P2P / 广播等）
 - thread：任务线程池、队列、处理器结构体封装
-- include/framework：对外暴露的接口头文件
 
-### 服务端实现（IotService）
+### 服务端实现（iot_service）
 
 服务端作为通信的中心或路由节点运行，负责处理 gRPC 请求、协调设备间消息。
 
@@ -87,7 +117,7 @@ IoTService 是一个通用、跨平台、设备间自由通信的“万物互联
 - display：基于 Rust 构建的可视化展示 UI（初步设计）
 - main.cpp：gRPC 服务注册和运行主流程
 
-### 工具库（IotUtils）
+### 工具库（utils）
 
 提供通用工具函数和数据结构。
 
