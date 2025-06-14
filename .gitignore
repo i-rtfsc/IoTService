@@ -63,4 +63,4 @@ cmake-build-debug/
 *.protoset
 
 # rust build artifacts
-source/IotService/display/target
+source/service/display/target

@@ -10,6 +10,5 @@ python -m grpc_tools.protoc \
   -I${PROTO_DIR} \
   --python_out=${OUT_DIR} \
   --grpc_python_out=${OUT_DIR} \
-  ${PROTO_DIR}/iot_service.proto \
-  ${PROTO_DIR}/account_service.proto
+  ${PROTO_DIR}/iot_service.proto
 

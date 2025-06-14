@@ -1,0 +1,9 @@
+# 定义一个只包含头文件的 INTERFACE 库
+add_library(common_headers INTERFACE)
+
+# 设置头文件搜索路径（添加 include 目录本身）
+target_include_directories(common_headers INTERFACE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+# 其他模块可以使用 target_link_libraries(xxx common_headers) 来引入头文件

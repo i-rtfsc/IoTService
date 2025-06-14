@@ -14,6 +14,11 @@ foreach (file_path IN LISTS TEST_SOURCES)
             GTest::gtest
             GTest::gtest_main
             pthread
-            IotFramework
+            common_headers
+            message_router
+            iface_user
+            impl_user_default
+            iface_device
+            impl_device_default
     )
 endforeach ()
