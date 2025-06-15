@@ -1,6 +1,9 @@
 # 公共头文件
 add_subdirectory(common)
 
+# utils模块：提供通用的工具函数和类
+add_subdirectory(utils)
+
 # plugin模块：提供注册 + 工厂 + 链接器 保活机制（无需 dlopen）的通用机制
 add_subdirectory(plugin)
 

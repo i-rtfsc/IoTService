@@ -15,6 +15,7 @@ foreach (file_path IN LISTS TEST_SOURCES)
             GTest::gtest_main
             pthread
             common_headers
+            utils
             message_router
             iface_user
             impl_user_default
