@@ -4,20 +4,45 @@
 #include "PluginFactory.h"
 #include "PluginRegistry.h"
 
-#define USER_MANAGER_FACTORY_NAME "default"
-#define USER_MANAGER_FACTORY_CLASS impl_user_default
+/// 默认用户管理器插件名称（Default implementation plugin name）
+#define USER_MANAGER_DEFAULT "default"
+
+/// Mock 用户管理器插件名称（Mock implementation plugin name for testing）
+#define USER_MANAGER_MOCK "mock"
 
 IOT_USER_NS_BEGIN
 
 /**
- * @brief 声明用户管理接口的插件工厂
- * @brief Declare the plugin factory for IUserManager interface
+ * @class UserManagerFactory
+ * @brief 用户管理器工厂类，用于获取 IUserManager 插件工厂实例。
  *
- * 通过该宏声明插件工厂类，便于动态加载和实例化 IUserManager 实现类。
- * This macro declares the plugin factory class to facilitate dynamic loading and instantiation
- * of IUserManager implementations.
+ * 提供对 `PluginFactory<IUserManager>` 的全局访问，支持用户管理器插件的注册与获取。
+ * 使用者可通过 `UserManagerFactory::instance()` 获取插件工厂，
+ * 并使用注册名称创建对应的 IUserManager 实例。
+ *
+ * Typical usage 示例：
+ * ```cpp
+ * auto userManager = UserManagerFactory::instance().create("default");
+ * ```
+ *
+ * @note 所有用户管理器插件应继承自 IUserManager 接口，并通过 PluginRegistrar 注册。
+ *
+ * @author Solo
+ * @version 1.0
+ * @date 2025-06-15
  */
-DECLARE_FORCE_LINK_SYMBOL(USER_MANAGER_FACTORY_CLASS)
-DECLARE_PLUGIN_FACTORY(IUserManager, UserManagerFactory, USER_MANAGER_FACTORY_CLASS);
+class UserManagerFactory {
+public:
+    /**
+     * @brief 获取 IUserManager 插件工厂单例。
+     *
+     * 返回的是 `PluginFactory<IUserManager>` 的全局唯一实例。
+     *
+     * @return PluginFactory<IUserManager>& 插件工厂引用。
+     */
+    static PluginFactory<IUserManager>& instance() {
+        return PluginFactory<IUserManager>::instance();
+    }
+};
 
 IOT_USER_NS_END

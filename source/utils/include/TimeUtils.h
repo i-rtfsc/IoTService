@@ -18,6 +18,10 @@ IOT_UTILS_NS_BEGIN
  *
  * A utility class for working with time-related operations, including formatting,
  * parsing, and timing measurements using both system and steady clocks.
+ *
+ * @author Solo
+ * @version 1.0
+ * @date 2025-06-15
  */
 class Time {
 public:

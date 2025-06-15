@@ -15,11 +15,11 @@ add_subdirectory(core/message)
 
 # 添加device接口和实现模块
 add_subdirectory(iface/device)
-add_subdirectory(impls/device/default)
+add_subdirectory(impls/device)
 
 # 添加user接口和实现模块
 add_subdirectory(iface/user)
-add_subdirectory(impls/user/default)
+add_subdirectory(impls/user)
 
 # gGRPC 服务
 add_subdirectory(service)

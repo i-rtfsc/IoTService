@@ -6,7 +6,6 @@ target_include_directories(message_router PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-# 如果用到了 common
 target_link_libraries(message_router PUBLIC
         common_headers
         task_thread

@@ -18,8 +18,8 @@ foreach (file_path IN LISTS TEST_SOURCES)
             utils
             message_router
             iface_user
-            impl_user_default
+            impl_user
             iface_device
-            impl_device_default
+            impl_device
     )
 endforeach ()

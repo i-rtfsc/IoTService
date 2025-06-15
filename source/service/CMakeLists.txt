@@ -22,9 +22,9 @@ target_link_libraries(iot_service PRIVATE
         task_thread
         message_router
         iface_user
-        impl_user_default
+        impl_user
         iface_device
-        impl_device_default
+        impl_device
         proto_lib
         rust_display
         gRPC::grpc++_reflection

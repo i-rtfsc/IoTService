@@ -5,35 +5,42 @@
 #include "PluginRegistry.h"
 #include "common/NameSpaceDef.h"
 
-/// @brief Default factory name for device manager plugin.
-/// @brief 设备管理器插件的默认工厂名称
-#define DEVICE_MANAGER_FACTORY_NAME "default"
-
-/// @brief Class name of the default device manager implementation.
-/// @brief 默认设备管理器实现类的名称
-#define DEVICE_MANAGER_FACTORY_CLASS impl_device_default
+/// 默认设备管理器插件名称（Default implementation plugin name）
+#define DEVICE_MANAGER_DEFAULT "default"
 
 IOT_DEVICE_NS_BEGIN
 
 /**
- * @brief Ensure the symbol DEVICE_MANAGER_FACTORY_CLASS is linked into final binary.
- * @brief 强制链接 DEVICE_MANAGER_FACTORY_CLASS 符号到最终可执行文件中
+ * @class DeviceManagerFactory
+ * @brief 设备管理器工厂类，用于获取 IDeviceManager 插件工厂实例。
  *
- * This macro ensures that the implementation class symbol is preserved
- * during linking, which is essential for plugin systems using dynamic registration.
- * 该宏确保在链接时保留实现类符号，适用于基于插件的动态注册系统。
- */
-DECLARE_FORCE_LINK_SYMBOL(DEVICE_MANAGER_FACTORY_CLASS)
-
-/**
- * @brief Declare a plugin factory for IDeviceManager.
- * @brief 为 IDeviceManager 声明插件工厂
+ * 提供对 `PluginFactory<IDeviceManager>` 的全局访问，支持设备管理器插件的注册与获取。
+ * 用户可通过 `DeviceManagerFactory::instance()` 获取插件工厂，
+ * 并根据插件名称创建对应的 `IDeviceManager` 实例。
  *
- * Registers the class DEVICE_MANAGER_FACTORY_CLASS as the default factory class
- * under the plugin category IDeviceManager.
- * 将 DEVICE_MANAGER_FACTORY_CLASS 注册为 IDeviceManager 的默认工厂实现，
- * 供插件系统按名称加载。
+ * 使用示例（Typical usage）：
+ * ```cpp
+ * auto deviceManager = DeviceManagerFactory::instance().create("default");
+ * ```
+ *
+ * @note 所有设备管理器插件应继承自 `IDeviceManager` 接口，并通过 `PluginRegistrar` 注册。
+ *
+ * @author Solo
+ * @version 1.0
+ * @date 2025-06-15
  */
-DECLARE_PLUGIN_FACTORY(IDeviceManager, DeviceManagerFactory, DEVICE_MANAGER_FACTORY_CLASS);
+class DeviceManagerFactory {
+public:
+    /**
+     * @brief 获取 IDeviceManager 插件工厂单例。
+     *
+     * 返回的是 `PluginFactory<IDeviceManager>` 的全局唯一实例。
+     *
+     * @return PluginFactory<IDeviceManager>& 插件工厂引用。
+     */
+    static PluginFactory<IDeviceManager>& instance() {
+        return PluginFactory<IDeviceManager>::instance();
+    }
+};
 
 IOT_DEVICE_NS_END

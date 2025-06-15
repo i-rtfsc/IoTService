@@ -19,7 +19,7 @@ protected:
     }
 
     std::shared_ptr<IOT_DEVICE_NS::IDeviceManager> manager =
-        IOT_DEVICE_NS::DeviceManagerFactory::instance().create(DEVICE_MANAGER_FACTORY_NAME);
+        IOT_DEVICE_NS::DeviceManagerFactory::instance().create(DEVICE_MANAGER_DEFAULT);
 };
 
 TEST_F(DeviceManagerTest, RegisterDevice_Success) {

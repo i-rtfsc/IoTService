@@ -41,9 +41,4 @@ private:
     static constexpr const char* kTAG = "DefaultUserManager";
 };
 
-// 注册插件，方便动态加载与实例化 / Register plugin for dynamic loading and instantiation
-REGISTER_PLUGIN(IUserManager, DefaultUserManager, USER_MANAGER_FACTORY_NAME)
-// 定义强制链接符号，防止被链接器优化掉 / Define force link symbol to prevent linker optimization removal
-DEFINE_FORCE_LINK_SYMBOL(USER_MANAGER_FACTORY_CLASS)
-
 IOT_USER_NS_END

@@ -21,8 +21,8 @@ IOT_NS_BEGIN
  */
 MessageRouter::MessageRouter() {
     mThead.start(); // 启动内部处理线程，保证消息异步处理
-    mDeviceManagerFactory = IOT_DEVICE_NS::DeviceManagerFactory::instance().create(DEVICE_MANAGER_FACTORY_NAME);
-    mUserManagerFactory = IOT_USER_NS::UserManagerFactory::instance().create(USER_MANAGER_FACTORY_NAME);
+    mDeviceManagerFactory = IOT_DEVICE_NS::DeviceManagerFactory::instance().create(DEVICE_MANAGER_DEFAULT);
+    mUserManagerFactory = IOT_USER_NS::UserManagerFactory::instance().create(USER_MANAGER_DEFAULT);
 }
 
 /**

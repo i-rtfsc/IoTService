@@ -118,16 +118,4 @@ private:
     IOT_NS::ShardedMap<std::string, DeviceInfo, SHARD_COUNT> mDevices;
 };
 
-/**
- * @brief Register DefaultDeviceManager as the plugin for IDeviceManager.
- * @brief 将 DefaultDeviceManager 注册为 IDeviceManager 的插件实现
- */
-REGISTER_PLUGIN(IDeviceManager, DefaultDeviceManager, DEVICE_MANAGER_FACTORY_NAME)
-
-/**
- * @brief Force link DEVICE_MANAGER_FACTORY_CLASS symbol to ensure availability in plugin registry.
- * @brief 强制链接 DEVICE_MANAGER_FACTORY_CLASS 符号，确保插件注册表能找到
- */
-DEFINE_FORCE_LINK_SYMBOL(DEVICE_MANAGER_FACTORY_CLASS)
-
 IOT_DEVICE_NS_END

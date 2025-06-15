@@ -15,6 +15,17 @@
 IOT_DEVICE_NS_BEGIN
 
 /**
+ * @brief 注册默认设备管理器插件（Register the default device manager plugin）
+ *
+ * 该静态对象在模块加载阶段自动构造，
+ * 将名为 "default"（由宏 `DEVICE_MANAGER_DEFAULT` 定义）的插件注册到
+ * `PluginFactory<IDeviceManager>` 中，并指定其构造函数为 `DefaultDeviceManager` 的共享指针。
+ */
+static PluginRegistrar<IDeviceManager> registerDefaultDeviceManager(
+    DEVICE_MANAGER_DEFAULT,
+    []() { return std::make_shared<DefaultDeviceManager>(); });
+
+/**
  * @brief Constructor
  * @brief 构造函数
  */
